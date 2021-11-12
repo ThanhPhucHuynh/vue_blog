@@ -6,6 +6,7 @@ import App from "./App.vue";
 // import "ant-design-vue/dist/antd.css";
 
 import {
+  Modal,
   Layout,
   Button,
   Spin,
@@ -20,6 +21,8 @@ import {
   InputNumber,
   Input,
   Tag,
+  Avatar,
+  
 } from "ant-design-vue";
 import 'ant-design-vue/dist/antd.css';
 import axios from "axios";
@@ -28,8 +31,7 @@ import router from "./router";
 import store from "./store";
 
 // axios.defaults.withCredentials = true;
-axios.defaults.baseURL = "http://localhost:8081";
-
+axios.defaults.baseURL = "https://sleepy-brook-59433.herokuapp.com";
 
 axios.interceptors.response.use(undefined, function(error) {
   if (error) {
@@ -49,7 +51,9 @@ const app = createApp(App);
 app.config.productionTip = false;
 app.use(router);
 app.use(store)
+app.use(Modal);
 
+app.use(Avatar);
 app.use(Layout);
 app.use(Button);
 app.use(Spin);

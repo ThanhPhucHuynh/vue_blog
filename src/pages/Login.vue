@@ -182,7 +182,7 @@ export default {
       console.log(this.form);
       try {
         await this.Login(this.form);
-        this.$router.push("/register");
+        this.$router.push("/blog");
         this.showError = false;
       } catch (error) {
         this.showError = true;

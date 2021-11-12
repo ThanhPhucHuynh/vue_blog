@@ -1,35 +1,120 @@
 <template>
-  <div class="login">
-    {{ blogs }}
-    <!-- <div>
-      <form @submit.prevent="submit">
-        <div>
-          <label for="name">name:</label>
-          <input type="text" name="name" v-model="form.name" />
+  <div class="containerblogs">
+    <div class="strips">
+      <div class="s-one"></div>
+      <div class="s-two"></div>
+      <div class="s-three"></div>
+    </div>
+
+    <div class="data">
+      <div class="contact">
+        <span>Contact</span>
+      </div>
+
+      <div class="tag">
+        <p
+          >You're not lucky, <br />
+          You worth it</p
+        >
+      </div>
+
+      <div class="year">2019</div>
+
+      <div class="arrow-left">
+        <i class="fa fa-arrow-left"></i>
+      </div>
+
+      <div class="arrow-right">
+        <i class="fa fa-arrow-right"></i>
+      </div>
+
+      <div class="add">
+        <i class="fa fa-plus"></i>
+      </div>
+    </div>
+
+    <div class="img">
+      <img src="../assets/images/hero.jpg" alt="" />
+    </div>
+    <div class="title">
+      <div class="div-spin">
+        <!-- <a-space>? -->
+          <a-spin @click="showModal" size="large" />
+        <!-- </a-space> -->
+      </div>
+      <!-- <a-button type="primary" @click="showModal">Open Modal</a-button> -->
+    </div>
+    <div class="titleblog">
+      <!-- <span>regel<br />black</span> -->
+    </div>
+
+    <div class="line"></div>
+
+    <div class="e-shop">
+      <span>E-shop</span>
+    </div>
+
+    <div class="tag-line">
+      <span>Discover products</span>
+    </div>
+
+    <div class="media">
+      <ul>
+        <li><i class="fa fa-facebook"></i></li>
+        <li><i class="fa fa-instagram"></i></li>
+        <li><i class="fa fa-twitter"></i></li>
+      </ul>
+    </div>
+    <div class="blog">
+      <li v-for="item in Posts" :key="item.id">
+        <div class="card-blog">
+          <card :item="item" />
         </div>
-        <div>
-          <label for="email">email:</label>
-          <input type="text" name="email" v-model="form.email" />
-        </div>
-        <div>
-          <label for="password">Password:</label>
-          <input type="password" name="password" v-model="form.password" />
-        </div>
-        <button type="submit">Submit</button>
-      </form>
-      <p v-if="showError" id="error">Username or Password is incorrect</p>
-    </div> -->
+      </li>
+    </div>
+    <a-modal
+      v-model:visible="visible"
+      title="ADD BLOG"
+      width="100%"
+      wrap-class-name="full-modal"
+      @ok="handleOk"
+    >
+      <forma />
+    </a-modal>
   </div>
 </template>
 
 <script>
-// import axios from "axios";
-// import { mapActions } from "vuex";
-import BaseRequests from "../core/BaseRequest";
-
+import "./Blog.css";
+import { mapGetters, mapActions } from "vuex";
+// import BaseRequests from "../core/BaseRequest";
+import { TweenMax, Circ, Power3, Power2, Expo } from "gsap";
+import Card from "../components/card.vue";
+import Form from "../components/form.vue";
+import { ref } from "vue";
 export default {
   name: "Blog",
-  components: {},
+  components: {
+    card: Card,
+    forma: Form,
+  },
+  setup() {
+    const visible = ref(false);
+    const showModal = () => {
+      visible.value = true;
+    };
+
+    const handleOk = (e) => {
+      console.log(e);
+      visible.value = false;
+    };
+
+    return {
+      visible,
+      showModal,
+      handleOk,
+    };
+  },
   data() {
     return {
       form: {
@@ -38,59 +123,117 @@ export default {
         name: "",
       },
       showError: false,
-      blogs: [],
+      // blogs: [],
     };
   },
   mounted: async function () {
-    // const token =
-    //   "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJudmExMDFAZ21haWwuY29tIiwiaWQiOjQsImV4cCI6MTYzNjYxOTkzMCwiaWF0IjoxNjM2NjAxOTMwLCJlbWFpbCI6Im52YTEwMUBnbWFpbC5jb20ifQ.vCe_XK09ISsei6VUomU8MeID_WtKMzJBke_OsXYl7x794pI_4bIahXoIT8HwAvqQO8LAvVzb-UbmSdhBoP1fHQ";
-    this.blogs = await BaseRequests.get("post");
-    // const config = {
-    //   headers: { Authorization: `Bearer ${token}` },
-    // };
-    // this.blogs = await axios.get("localhost:8081/post", config);
+    this.startAnimations();
+    await this.submit();
+  },
+  computed: {
+    ...mapGetters({ Posts: "StatePosts" }),
   },
   methods: {
-    // ...mapActions(["Register"]),
+    ...mapActions(["GetPosts"]),
+    async add(items) {
+      console.log(items);
+    },
     async submit() {
-      console.log(this.form);
-      try {
-        await this.Register(this.form);
-        this.$router.push("/login");
-        this.showError = false;
-      } catch (error) {
-        this.showError = true;
-      }
+      await this.GetPosts();
+    },
+    startAnimations: function () {
+      // gsap.to("#title",{ duration: 1, color: "red"})
+
+      TweenMax.to(".left", 2, {
+        delay: 0.8,
+        width: "50%",
+        ease: Power2.easeInOut,
+      });
+
+      TweenMax.to(".right", 2, {
+        delay: 0.6,
+        width: "50%",
+        ease: Power3.easeInOut,
+      });
+
+      TweenMax.from(".nav", 2, {
+        delay: 0.8,
+        opacity: 0,
+        ease: Expo.easeInOut,
+      });
+
+      TweenMax.from(".text h1", 2, {
+        delay: 0.6,
+        x: 1000,
+        ease: Circ.easeInOut,
+      });
+
+      TweenMax.from(".text p", 2, {
+        delay: 0.7,
+        x: 1000,
+        ease: Circ.easeInOut,
+      });
+
+      TweenMax.to(".karina", 2, {
+        delay: 1.5,
+        width: "800px",
+        ease: Power2.easeInOut,
+      });
+
+      TweenMax.staggerFrom(
+        ".bottomnav ul li",
+        2,
+        {
+          delay: 1,
+          x: 1000,
+          ease: Circ.easeInOut,
+        },
+        0.08
+      );
+
+      TweenMax.from(".info", 2, {
+        delay: 1.5,
+        y: 100,
+        ease: Circ.easeInOut,
+      });
+
+      TweenMax.from(".name", 2, {
+        delay: 1.5,
+        x: -600,
+        ease: Circ.easeInOut,
+      });
     },
   },
 };
 </script>
 
-<style scoped>
-* {
-  box-sizing: border-box;
+<style>
+.blog {
+  overflow: auto;
+  height: 100vh;
+  width: 100%;
 }
-label {
-  padding: 12px 12px 12px 0;
+.div-spin {
+  position: relative;
   display: inline-block;
+  margin-left: 150px !important;
 }
-button[type="submit"] {
-  background-color: #4caf50;
-  color: white;
-  padding: 12px 20px;
-  cursor: pointer;
-  border-radius: 30px;
-}
-button[type="submit"]:hover {
-  background-color: #45a049;
-}
-input {
-  margin: 5px;
-  box-shadow: 0 0 15px 4px rgba(0, 0, 0, 0.06);
-  padding: 10px;
-  border-radius: 30px;
-}
-#error {
-  color: red;
+</style>
+<style lang="less">
+.full-modal {
+  .ant-modal {
+    max-width: 100%;
+    top: 0;
+    padding-bottom: 0;
+    margin: 0;
+  }
+  .ant-modal-content {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh);
+  }
+  .ant-modal-body {
+    flex: 1;
+  }
 }
 </style>

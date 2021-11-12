@@ -1,5 +1,4 @@
 const axios = require('axios')
-const apiUrl = 'http://localhost:8081/'
 
 export default {
     getHeaders() {
@@ -9,12 +8,12 @@ export default {
         } return { Authorization: 'Bearer ' + token }
     },
     get(url) {
-        return axios.get(apiUrl+url, { headers: this.getHeaders() })
+        return axios.get(url, { headers: this.getHeaders() })
     },
     post(url, data) {
-        return axios.post(apiUrl+url, data, { headers: this.getHeaders() })
+        return axios.post(url, data, { headers: this.getHeaders() })
     },
     delete(url, data) {
-        return axios.delete(apiUrl+url, data, { headers: this.getHeaders() })
+        return axios.delete(url, data, { headers: this.getHeaders() })
     }
 }

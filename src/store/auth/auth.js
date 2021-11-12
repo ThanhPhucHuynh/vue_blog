@@ -1,8 +1,8 @@
 import axios from "axios";
-
+import BaseRequests from "../../core/BaseRequest";
 const state = {
   user: null,
-  post: null,
+  post: [],
 };
 
 const getters = {
@@ -59,31 +59,26 @@ const actions = {
     
   },
 
-  // async CreatePost({ dispatch }, post) {
-  //   await axios.post("post/", {
-  //     "content": post.content,
-  //     "like": "0",
-  //     "uid": localStorage.getItem('id'),
-  //     "shared": "0"
-  //   },
-  //   {
-  //     headers: {
-  //     "Accept": "application/json",
-  //     "Content-Type": "application/json",
-  //     "Authorization":  `Bearer ${localStorage.getItem('token')}`
-  //   }});
-  //   return await dispatch("GetPosts");
-  // },
+  async CreatePost({ dispatch }, post) {
+    await axios.post("post", {
+      content: post.content,
+      uid: localStorage.getItem('id'),
+      title: post.title
+    },
+    {
+      headers: {
+      "Accept": "application/json",
+      "Content-Type": "application/json",
+      "Authorization":  `Bearer ${localStorage.getItem('token')}`
+    }});
+    return await dispatch("GetPosts");
+  },
 
-  // async GetPosts({ commit }) {
-  //   let response = await Axios.get("post/",{
-  //     headers: {
-  //     "Accept": "application/json",
-  //     "Content-Type": "application/json",
-  //     "Authorization":  `Bearer ${localStorage.getItem('token')}`
-  //   }});
-  //   commit("setPosts", response.data);
-  // },
+  async GetPosts({ commit }) {
+    let response = await await BaseRequests.get("post")
+    commit("setPosts", response.data.reverse());
+  },
+
   async LogOut({ commit }) {
     let user = null;
     localStorage.removeItem("name");
@@ -98,9 +93,9 @@ const mutations = {
     state.user = username;
   },
 
-  // setPosts(state, posts) {
-  //   state.posts = posts;
-  // },
+  setPosts(state, posts) {
+    state.posts = posts;
+  },
   logout(state, user) {
     state.user = user;
   },
